@@ -101,14 +101,11 @@ window.onload = function () {
       const descent = Math.round(routeProperties.descent);
 
       routeInfo.innerHTML = `
-                <div class="mt-3">
                     <h4>Route Information</h4>
                     <p>Distance: ${distance} km</p>
                     <p>Duration: ${duration} minutes</p>
                     <p>Ascent: ${ascent} m</p>
-                    <p>Descent: ${descent} m</p>
-                </div>
-            `;
+                    <p>Descent: ${descent} m</p>`;
     }
   });
 
