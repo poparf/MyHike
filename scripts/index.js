@@ -1,18 +1,16 @@
 const roundToThree = (num) => Math.round(num * 1000) / 1000;
+import { fetchHikingRoute } from "./services/fetchHikingRoute.js";
+import { MAP_TILER_API_URL } from "./config.js";
 
 window.onload = function () {
-  // Replace with your OpenRouteService API key
-  const ORS_API_KEY =
-    "5b3ce3597851110001cf62481b38b95396a94f4ba9dd4a4a11029351";
 
-  var map = L.map("map", {
-    zoomSnap: 0.25,
-    whellPxPerZoomLevel: 100,
-  }).setView([45.601387, 24.73529], 13);
+    // Map is being created and Vf. Moldoveanu is displayed.
+  var map = L.map("map").setView([45.601387, 24.73529], 13);
 
+  // The map is being displayed with the help of the MapTiler API.
   L.tileLayer(
-    "https://api.maptiler.com/maps/outdoor-v2/{z}/{x}/{y}.png?key=igWHfo3P7UsrY11uVokp&style=larger_icons",
-    {
+    MAP_TILER_API_URL,
+    { // A few settings to set the zoom and the size of tiles. Asta o sa faca textul si iconitele mai mari.
       maxZoom: 19,
       tileSize: 512,
       zoomOffset: -1,
@@ -20,6 +18,7 @@ window.onload = function () {
   ).addTo(map);
 
   let savedRoutes = [];
+  // Localstorage este ca un dictionar in browser. Il folosesti ca sa pastrezi datele chiar daca iesi de pe site.
   if (localStorage.getItem("savedRoutes") !== null)
     savedRoutes = JSON.parse(localStorage.getItem("savedRoutes"));
 
@@ -42,43 +41,9 @@ window.onload = function () {
   let endMarker;
   let geoJSONLayer;
 
-  const createHikingRouteGeoJSON = async (start, end) => {
-    const body = {
-      coordinates: [
-        [start.lng, start.lat],
-        [end.lng, end.lat],
-      ],
-      preference: "recommended",
-      units: "m",
-      language: "en",
-      instructions: true,
-      geometry: true,
-      elevation: true,
-    };
-
-    try {
-      const response = await fetch(
-        "https://api.openrouteservice.org/v2/directions/foot-hiking/geojson",
-        {
-          method: "POST",
-          headers: {
-            Authorization: ORS_API_KEY,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(body),
-        }
-      );
-      return await response.json();
-    } catch (error) {
-      console.error("Error fetching route:", error);
-      return null;
-    }
-  }
-
   map.on("click", (event) => {
     if (allowedToPutRoutes) {
       if (switchPoint === false) {
-        console.log("placed first marker");
         startPoint.lat = event.latlng.lat;
         startPoint.lng = event.latlng.lng;
         switchPoint = true;
@@ -94,7 +59,6 @@ window.onload = function () {
           endPositionParagraph.innerHTML = `Click on the map to set the end position`;
         positionDiv.style.display = "block";
       } else {
-        console.log("placed second marker");
         endPoint.lat = event.latlng.lat;
         endPoint.lng = event.latlng.lng;
         switchPoint = false;
@@ -120,19 +84,16 @@ window.onload = function () {
     showRouteBtn.style.display = "none";
     saveRouteBtn.style.display = "block";
 
-    const routeGeoJSON = await createHikingRouteGeoJSON(startPoint, endPoint);
+    const routeGeoJSON = await fetchHikingRoute(startPoint, endPoint);
 
     if (routeGeoJSON) {
       if (geoJSONLayer) map.removeLayer(geoJSONLayer);
-
-      console.log(routeGeoJSON);
 
       geoJSONLayer = L.geoJSON(routeGeoJSON).addTo(map);
 
       map.fitBounds(geoJSONLayer.getBounds());
 
       const routeProperties = routeGeoJSON.features[0].properties;
-      console.log("ROUTEPROPERTIES:", routeProperties);
 
       const distance = (routeProperties.summary.distance / 1000).toFixed(2);
       const duration = Math.round(routeProperties.summary.duration / 60);
