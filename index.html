@@ -1,37 +1,104 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>My Hike</title>
 
+    <!-- Bootstrap-->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- ~~~~~~~~~~~~~ -->
+
     <!--Codul asta incarca biblioteca Leaflet -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-    crossorigin=""/>
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-    crossorigin=""></script>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+    <script src="https://cdn.maptiler.com/maptiler-sdk-js/v2.3.0/maptiler-sdk.umd.js"></script>
+    <link
+      href="https://cdn.maptiler.com/maptiler-sdk-js/v2.3.0/maptiler-sdk.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.maptiler.com/leaflet-maptilersdk/v2.0.0/leaflet-maptilersdk.js"></script>
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 
     <!-- Leaflet routing -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css"
+    />
     <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-    <link rel="stylesheet" href="./styles/style.css">
-    
+    <link rel="stylesheet" href="./styles/style.css" />
+
     <!-- awsome markers plugin -->
     <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.awesome-markers/2.0.4/leaflet.awesome-markers.css"
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.awesome-markers/2.0.4/leaflet.awesome-markers.css"
     />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.awesome-markers/2.0.4/leaflet.awesome-markers.min.js"></script>
-  
-</head>
-<body>
-    <div id="map"></div>
+  </head>
+  <body>
+    <div
+      id="position-container"
+      class="position-absolute bottom-0 left-0 z-2 bg-light p-3 m-3 rounded shadow"
+    >
+      <div class="row">
+        <div class="col-12 text-end mb-2">
+          <button
+            id="close-btn"
+            type="button"
+            class="btn-close"
+            aria-label="Close"
+          ></button>
+        </div>
+      </div>
+      <div class="row">
+        <div>
+          <p id="start-position"></p>
+        </div>
+      </div>
+      <div class="row">
+        <div>
+          <p class="mb-0" id="end-position"></p>
+        </div>
+      </div>
+      <div class="row">
+        <div id="route-info-container"></div>
+      </div>
+      <div class="row mt-2 justify-content-center">
+        <button id="show-route-btn" class="btn btn-primary w-auto h-auto">
+          Show route
+        </button>
+        <button id="save-route-btn" class="btn btn-success w-auto h-auto">
+          Save route
+        </button>
+      </div>
+    </div>
+    <div id="map" class="z-1"></div>
     <script src="./scripts/index.js"></script>
-</body>
+  </body>
 </html>
