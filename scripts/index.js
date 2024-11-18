@@ -3,6 +3,24 @@ import { fetchHikingRoute } from "./services/fetchHikingRoute.js";
 import { MAP_TILER_API_URL } from "./config.js";
 
 window.onload = function () {
+  // The red and blue icons are being created for the start and end points.
+  const redIcon = L.icon({
+    iconUrl: '/assets/red-pin.png', // Red marker icon
+    //shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',   // Marker shadow
+    iconSize: [47, 47],  // Default size
+    iconAnchor: [22, 41], // Anchor point of the icon
+    popupAnchor: [1, -34], // Popup position relative to icon
+    shadowSize: [41, 41]  // Shadow size
+  });
+
+  const blueIcon = L.icon({
+    iconUrl: '/assets/blue-pin.png', // Red marker icon
+    //shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',   // Marker shadow
+    iconSize: [40, 40],  // Default size
+    iconAnchor: [20, 41], // Anchor point of the icon
+    popupAnchor: [1, -34], // Popup position relative to icon
+    shadowSize: [41, 41]  // Shadow size
+  })
 
     // Map is being created and Vf. Moldoveanu is displayed.
   var map = L.map("map").setView([45.601387, 24.73529], 13);
@@ -51,7 +69,9 @@ window.onload = function () {
           map.removeLayer(startMarker);
           startMarker = undefined;
         }
-        startMarker = L.marker(startPoint).addTo(map);
+        startMarker = L.marker([startPoint.lat, startPoint.lng], {
+          icon: redIcon
+      }).addTo(map);
         startPositionParagraph.innerHTML = `Start position: <span class="fw-medium">${roundToThree(
           startPoint.lat
         )}, ${roundToThree(startPoint.lng)}</span>`;
@@ -66,7 +86,10 @@ window.onload = function () {
           map.removeLayer(endMarker);
           endMarker = undefined;
         }
-        endMarker = L.marker(endPoint).addTo(map);
+        endMarker = L.marker([endPoint.lat, endPoint.lng], {
+          icon: blueIcon
+      }).addTo(map);
+
         endPositionParagraph.innerHTML = `End position: <span class="fw-medium">${roundToThree(
           endPoint.lat
         )}, ${roundToThree(endPoint.lng)}</span>`;
