@@ -60,8 +60,21 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.awesome-markers/2.0.4/leaflet.awesome-markers.css"
     />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.awesome-markers/2.0.4/leaflet.awesome-markers.min.js"></script>
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+     <!-- Font awesome-->
+    <script src="https://kit.fontawesome.com/1f37b21ecf.js" crossorigin="anonymous"></script>
   </head>
   <body>
+    <div class="z-2" style="position:absolute;top: 90px; left: 7px;">
+      <button id="center-btn" class="btn btn-light"><i class="fa-solid fa-location-crosshairs"></i></button>
+    </div>
+    <div class="z-2 d-flex" style="position: absolute; top: 140px; left: 7px;">
+      <button id="random-mountain-btn" class="btn btn-success"><i class="fa-solid fa-mountain"></i></button>
+      <div id="random-mountain-info" class="bg-light rounded p-2 ms-2">
+        <span class="mb-0 ">Show a random mountain</span>
+      </div>
+    </div>
+    </div>
     <div
       id="position-container"
       class="position-absolute bottom-0 left-0 z-2 bg-light p-3 m-3 rounded shadow"
