@@ -85,7 +85,13 @@ window.onload = function () {
         .on("click", (e) => {
           map.removeLayer(e.target);
           routeMarkers = routeMarkers.filter((marker) => marker !== e.target);
-          if (routeMarkers.length > 0) routeMarkers[0].setIcon(redIcon);
+          if (routeMarkers.length > 0) {
+            routeMarkers[0].setIcon(redIcon);
+            let latestPoint = `${roundToThree(
+              routeMarkers.at(-1)._latlng.lat
+            )}, ${roundToThree(routeMarkers.at(-1)._latlng.lng)}`;
+            routeInfo.innerHTML = `Latest point location: ${latestPoint};`;
+          }
           if (routeMarkers.length == 0) {
             positionDiv.style.display = "none";
             showRouteBtn.style.display = "none";
@@ -98,6 +104,11 @@ window.onload = function () {
       showRouteBtn.style.display = "block";
     }
     if (geoJSONLayer) map.removeLayer(geoJSONLayer);
+
+    let latestPoint = `${roundToThree(
+      routeMarkers.at(-1)._latlng.lat
+    )}, ${roundToThree(routeMarkers.at(-1)._latlng.lng)}`;
+    routeInfo.innerHTML = `Latest point location: ${latestPoint}`;
   });
 
   let routeProperties;
