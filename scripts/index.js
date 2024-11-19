@@ -45,7 +45,6 @@ window.onload = function () {
   if (localStorage.getItem("savedRoutes") !== null)
     savedRoutes = JSON.parse(localStorage.getItem("savedRoutes"));
 
-
   navigator.geolocation.getCurrentPosition(
     (pos) => {
       // In browserul brave nu merge.
@@ -99,8 +98,6 @@ window.onload = function () {
       showRouteBtn.style.display = "block";
     }
     if (geoJSONLayer) map.removeLayer(geoJSONLayer);
-
-    console.log(routeMarkers);
   });
 
   let routeProperties;
@@ -111,7 +108,7 @@ window.onload = function () {
 
     let coordsList = routeMarkers.map((marker) => [
       marker._latlng.lng,
-      marker._latlng.lat
+      marker._latlng.lat,
     ]);
 
     const routeGeoJSON = await fetchHikingRoute(coordsList);
@@ -155,9 +152,12 @@ window.onload = function () {
 
   saveRouteBtn.addEventListener("click", (event) => {
     savedRoutes.push({
-      coordsList: routeMarkers.map((marker) => [marker._latlng.lng, marker._latlng.lat]),
-      routeInfo: routeProperties
-  });
+      coordsList: routeMarkers.map((marker) => [
+        marker._latlng.lng,
+        marker._latlng.lat,
+      ]),
+      routeInfo: routeProperties,
+    });
     localStorage.removeItem("savedRoutes");
     localStorage.setItem("savedRoutes", JSON.stringify(savedRoutes));
     console.log(savedRoutes);
@@ -218,5 +218,29 @@ window.onload = function () {
           });
       })
       .catch((error) => console.error("Error fetching mountains data:", error));
+  });
+
+  const bookmarkBtn = document.getElementById("bookmark-btn");
+  const bookmarkContainer = document.getElementById("bookmark-container");
+  bookmarkContainer.style.display = "none";
+
+  const bookmarksContainer = document.getElementById("bookmarks-container");
+
+  savedRoutes.forEach((route, index) => {
+    let startPointName = route.routeInfo.segments[0].steps[0].name;
+    // Afiseaza date despre fiecare ruta salvata.
+    bookmarksContainer.innerHTML += `
+    <div class="bookmark">
+      <h4>${startPointName}</p>
+
+      </div>
+    `;
+  });
+
+  let showBookmarks = false;
+  bookmarkBtn.addEventListener("click", (e) => {
+    bookmarkContainer.style.display = showBookmarks ? "none" : "block";
+    showBookmarks = !showBookmarks;
+    console.log(savedRoutes);
   });
 };

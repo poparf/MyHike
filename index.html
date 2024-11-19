@@ -65,16 +65,35 @@
     <script src="https://kit.fontawesome.com/1f37b21ecf.js" crossorigin="anonymous"></script>
   </head>
   <body>
-    <div class="z-2" style="position:absolute;top: 90px; left: 7px;">
-      <button id="center-btn" class="btn btn-light"><i class="fa-solid fa-location-crosshairs"></i></button>
-    </div>
-    <div class="z-2 d-flex" style="position: absolute; top: 140px; left: 7px;">
-      <button id="random-mountain-btn" class="btn btn-success"><i class="fa-solid fa-mountain"></i></button>
-      <div id="random-mountain-info" class="bg-light rounded p-2 ms-2">
-        <span class="mb-0 ">Show a random mountain</span>
+    <div class="z-2 position-absolute d-flex flex-column h-auto w-auto " style="top:90px; left: 7px;">
+      <div class="z-2 mb-2" >
+        <button id="center-btn" class="btn btn-light"><i class="fa-solid fa-location-crosshairs"></i></button>
+      </div>
+      <div class="z-2 d-flex mb-2">
+        <button id="random-mountain-btn" class="btn btn-success"><i class="fa-solid fa-mountain"></i></button>
+        <div id="random-mountain-info" class="bg-light rounded p-2 ms-2">
+          <span class="mb-0 ">Show a random mountain</span>
+        </div>
+      </div>
+      <div class="z-2 w-auto" >
+        <button id="bookmark-btn" class="btn btn-light"><i class="fa-regular fa-bookmark fa-xl"></i></button>
       </div>
     </div>
+    
+    <div>
+      <div id="bookmark-container" class="position-absolute top-0 end-0  m-5 p-3 z-2 bg-light rounded shadow">
+        <div class="row">
+          <div class="col-12 text-end mb-2">
+            <button id="close-bookmark-btn" type="button" class="btn-close" aria-label="Close"></button>
+          </div>
+        </div>
+        <div class="row">
+          <div id="bookmarks-container">
+          </div>
+        </div>
+      </div>
     </div>
+
     <div
       id="position-container"
       class="position-absolute bottom-0 left-0 z-2 bg-light p-3 m-3 rounded shadow"
