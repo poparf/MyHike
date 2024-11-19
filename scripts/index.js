@@ -62,9 +62,6 @@ window.onload = function () {
     },
     (err) => console.error(err)
   );
-  let switchPoint = false;
-  const startPositionParagraph = document.getElementById("start-position");
-  const endPositionParagraph = document.getElementById("end-position");
   const positionDiv = document.getElementById("position-container");
   const showRouteBtn = document.getElementById("show-route-btn");
   const saveRouteBtn = document.getElementById("save-route-btn");
@@ -76,52 +73,36 @@ window.onload = function () {
   showRouteBtn.style.display = "none";
   saveRouteBtn.style.display = "none";
 
-  let allowedToPutRoutes = true;
-  let startMarker;
-  let endMarker;
   let geoJSONLayer;
+  let routeMarkers = [];
+  let allowedToPutRoutes = true;
 
   map.on("click", (event) => {
-    if (allowedToPutRoutes) {
-      if (switchPoint === false) {
-        startPoint.lat = event.latlng.lat;
-        startPoint.lng = event.latlng.lng;
-        switchPoint = true;
-        if (startMarker !== undefined) {
-          map.removeLayer(startMarker);
-          startMarker = undefined;
-        }
-        startMarker = L.marker([startPoint.lat, startPoint.lng], {
-          icon: redIcon,
-        }).addTo(map);
-        startPositionParagraph.innerHTML = `Start position: <span class="fw-medium">${roundToThree(
-          startPoint.lat
-        )}, ${roundToThree(startPoint.lng)}</span>`;
-        if (endPositionParagraph.innerHTML === "")
-          endPositionParagraph.innerHTML = `Click on the map to set the end position`;
-        positionDiv.style.display = "block";
-      } else {
-        endPoint.lat = event.latlng.lat;
-        endPoint.lng = event.latlng.lng;
-        switchPoint = false;
-        if (endMarker !== undefined) {
-          map.removeLayer(endMarker);
-          endMarker = undefined;
-        }
-        endMarker = L.marker([endPoint.lat, endPoint.lng], {
-          icon: blueIcon,
-        }).addTo(map);
+    if (allowedToPutRoutes === false) return;
+    let markerCoord = [event.latlng.lat, event.latlng.lng];
+    let icon = routeMarkers.length == 0 ? redIcon : blueIcon;
 
-        endPositionParagraph.innerHTML = `End position: <span class="fw-medium">${roundToThree(
-          endPoint.lat
-        )}, ${roundToThree(endPoint.lng)}</span>`;
-        showRouteBtn.style.display = "block";
-        saveRouteBtn.style.display = "none";
-        if (geoJSONLayer) {
-          map.removeLayer(geoJSONLayer);
-        }
-      }
+    routeMarkers.push(
+      L.marker(markerCoord, { icon })
+        .addTo(map)
+        .on("click", (e) => {
+          map.removeLayer(e.target);
+          routeMarkers = routeMarkers.filter((marker) => marker !== e.target);
+          if (routeMarkers.length > 0) routeMarkers[0].setIcon(redIcon);
+          if (routeMarkers.length == 0) {
+            positionDiv.style.display = "none";
+            showRouteBtn.style.display = "none";
+          }
+        })
+    );
+
+    if (routeMarkers.length > 1) {
+      positionDiv.style.display = "block";
+      showRouteBtn.style.display = "block";
     }
+    if (geoJSONLayer) map.removeLayer(geoJSONLayer);
+
+    console.log(routeMarkers);
   });
 
   showRouteBtn.addEventListener("click", async (event) => {
@@ -129,7 +110,13 @@ window.onload = function () {
     showRouteBtn.style.display = "none";
     saveRouteBtn.style.display = "block";
 
-    const routeGeoJSON = await fetchHikingRoute(startPoint, endPoint);
+    let coordsList = routeMarkers.map((marker) => [
+      roundToThree(marker._latlng.lat),
+      roundToThree(marker._latlng.lng),
+    ]);
+
+    console.log(coordsList);
+    const routeGeoJSON = await fetchHikingRoute(coordsList);
 
     if (routeGeoJSON) {
       if (geoJSONLayer) map.removeLayer(geoJSONLayer);
@@ -169,8 +156,6 @@ window.onload = function () {
     }
     startPoint = L.latLng(0, 0);
     endPoint = L.latLng(0, 0);
-    startPositionParagraph.innerHTML = "";
-    endPositionParagraph.innerHTML = "";
     routeInfo.innerHTML = "";
     switchPoint = false;
     allowedToPutRoutes = true;
@@ -237,7 +222,7 @@ window.onload = function () {
           .openPopup()
           .on("click", (e) => {
             removeRandomMountainMarker();
-          }); 
+          });
       })
       .catch((error) => console.error("Error fetching mountains data:", error));
   });
