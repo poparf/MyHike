@@ -111,8 +111,8 @@ window.onload = function () {
     saveRouteBtn.style.display = "block";
 
     let coordsList = routeMarkers.map((marker) => [
-      roundToThree(marker._latlng.lat),
-      roundToThree(marker._latlng.lng),
+      marker._latlng.lat,
+      marker._latlng.lng,
     ]);
 
     console.log(coordsList);
@@ -148,17 +148,11 @@ window.onload = function () {
     if (geoJSONLayer) {
       map.removeLayer(geoJSONLayer);
     }
-    if (startMarker !== undefined) {
-      map.removeLayer(startMarker);
-    }
-    if (endMarker !== undefined) {
-      map.removeLayer(endMarker);
-    }
-    startPoint = L.latLng(0, 0);
-    endPoint = L.latLng(0, 0);
     routeInfo.innerHTML = "";
-    switchPoint = false;
     allowedToPutRoutes = true;
+
+    routeMarkers.forEach((marker) => map.removeLayer(marker));
+    routeMarkers = [];
   });
 
   saveRouteBtn.addEventListener("click", (event) => {

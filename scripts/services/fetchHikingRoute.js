@@ -14,7 +14,7 @@ export const fetchHikingRoute = async (coordsList) => {
     geometry: true,
     elevation: true,
   };
-
+  console.log(body);
   try {
     const response = await fetch(
       // Dupa directions trebuie sa specifici tipul de traseu, in cazul nostru foot-hiking
