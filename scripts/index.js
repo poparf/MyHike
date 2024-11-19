@@ -45,8 +45,6 @@ window.onload = function () {
   if (localStorage.getItem("savedRoutes") !== null)
     savedRoutes = JSON.parse(localStorage.getItem("savedRoutes"));
 
-  let startPoint = L.latLng(0, 0);
-  let endPoint = L.latLng(0, 0);
 
   navigator.geolocation.getCurrentPosition(
     (pos) => {
@@ -105,17 +103,17 @@ window.onload = function () {
     console.log(routeMarkers);
   });
 
+  let routeProperties;
   showRouteBtn.addEventListener("click", async (event) => {
     allowedToPutRoutes = false;
     showRouteBtn.style.display = "none";
     saveRouteBtn.style.display = "block";
 
     let coordsList = routeMarkers.map((marker) => [
-      marker._latlng.lat,
       marker._latlng.lng,
+      marker._latlng.lat
     ]);
 
-    console.log(coordsList);
     const routeGeoJSON = await fetchHikingRoute(coordsList);
 
     if (routeGeoJSON) {
@@ -125,7 +123,7 @@ window.onload = function () {
 
       map.fitBounds(geoJSONLayer.getBounds());
 
-      const routeProperties = routeGeoJSON.features[0].properties;
+      routeProperties = routeGeoJSON.features[0].properties;
 
       const distance = (routeProperties.summary.distance / 1000).toFixed(2);
       const duration = Math.round(routeProperties.summary.duration / 60);
@@ -157,11 +155,12 @@ window.onload = function () {
 
   saveRouteBtn.addEventListener("click", (event) => {
     savedRoutes.push({
-      startPoint,
-      endPoint,
-    });
+      coordsList: routeMarkers.map((marker) => [marker._latlng.lng, marker._latlng.lat]),
+      routeInfo: routeProperties
+  });
     localStorage.removeItem("savedRoutes");
     localStorage.setItem("savedRoutes", JSON.stringify(savedRoutes));
+    console.log(savedRoutes);
   });
 
   centerBtn.addEventListener("click", (e) => {

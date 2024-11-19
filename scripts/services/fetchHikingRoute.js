@@ -5,6 +5,7 @@ import { ORS_API_KEY } from "../config.js";
 
 export const fetchHikingRoute = async (coordsList) => {
   // According to the OpenRouteService API documentation, the body of the request should contain the following properties:
+  
   const body = {
     coordinates: coordsList,
     preference: "recommended",
