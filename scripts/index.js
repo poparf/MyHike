@@ -59,6 +59,7 @@ window.onload = function () {
     },
     (err) => console.error(err)
   );
+  
   const positionDiv = document.getElementById("position-container");
   const showRouteBtn = document.getElementById("show-route-btn");
   const saveRouteBtn = document.getElementById("save-route-btn");
