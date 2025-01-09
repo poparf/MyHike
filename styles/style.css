@@ -10,3 +10,18 @@ html {
     width: 100%;
     border: 1px solid black;
 }
+.bookmark {
+    display: flex;
+    align-items: center; /* Ensures that the text and button are aligned vertically */
+    justify-content: space-between; /* Optional, adds space between the title and button */
+    margin-bottom: 10px; /* Adds space between each bookmark */
+  }
+  
+.bookmark p {
+margin: 0; /* Removes the default margin to make it align perfectly */
+padding-right: 10px; /* Optional: adds space between title and button */
+}
+
+.bookmark button {
+margin-left: 10px; /* Optional: adds space between title and button */
+}

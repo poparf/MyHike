@@ -234,6 +234,7 @@ window.onload = function () {
 
   const bookmarkBtn = document.getElementById("bookmark-btn");
   const bookmarkContainer = document.getElementById("bookmark-container");
+  const closeBookmarkBtn = document.getElementById("close-bookmark-btn");
   bookmarkContainer.style.display = "none";
 
   const bookmarksContainer = document.getElementById("bookmarks-container");
@@ -243,9 +244,9 @@ window.onload = function () {
     // Afiseaza date despre fiecare ruta salvata.
     bookmarksContainer.innerHTML += `
     <div class="bookmark">
-      <h4>${startPointName}</p>
-
-      </div>
+      <p>${startPointName}</p>
+      <button class="showSavedRoute">Show</button>
+    </div>
     `;
   });
 
@@ -253,6 +254,55 @@ window.onload = function () {
   bookmarkBtn.addEventListener("click", (e) => {
     bookmarkContainer.style.display = showBookmarks ? "none" : "block";
     showBookmarks = !showBookmarks;
-    console.log(savedRoutes);
   });
+
+  //aici e codul pentru afisarea unui traseu salvat in bookmarks
+  const showBookmarkButton = document.querySelectorAll(".showSavedRoute");
+
+  showBookmarkButton.forEach((button, index) => {
+    button.addEventListener("click", (event) => {
+      
+      allowedToPutRoutes = false;
+      displaySavedRoute(savedRoutes[index]);
+
+    });
+  });
+
+  async function displaySavedRoute(route) {
+    // Remove any existing route from the map
+    if (geoJSONLayer) map.removeLayer(geoJSONLayer);
+
+    // Create a new GeoJSON layer from the saved route's coordinates
+    const routeGeoJSON = await fetchHikingRoute(route.coordsList);
+
+    if (routeGeoJSON) {
+      // You can add this GeoJSON to the map
+      if (geoJSONLayer) map.removeLayer(geoJSONLayer); // Remove any existing layer
+
+      geoJSONLayer = L.geoJSON(routeGeoJSON).addTo(map); // Add the new route to the map
+
+      // Adjust the map to fit the bounds of the new route
+      map.fitBounds(geoJSONLayer.getBounds());
+
+      routeInfo.innerHTML = `
+        <h4>Route Information</h4>
+        <p>Distance: ${(routeGeoJSON.features[0].properties.summary.distance / 1000).toFixed(2)} km</p>
+        <p>Duration: ${Math.round(routeGeoJSON.features[0].properties.summary.duration / 60)} minutes</p>
+        <p>Ascent: ${routeGeoJSON.features[0].properties.ascent} m</p>
+        <p>Descent: ${routeGeoJSON.features[0].properties.descent} m</p>
+      `;
+    }
+  }
+  closeBookmarkBtn.addEventListener("click", (event) => {
+    bookmarkContainer.style.display = "none";
+    if (geoJSONLayer) {
+      map.removeLayer(geoJSONLayer);
+    }
+    routeInfo.innerHTML = "";
+    allowedToPutRoutes = true;
+
+    routeMarkers.forEach((marker) => map.removeLayer(marker));
+    routeMarkers = [];
+  });
+
 };
