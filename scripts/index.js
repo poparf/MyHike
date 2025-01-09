@@ -268,14 +268,33 @@ window.onload = function () {
     });
   });
 
+  let startMarker = null;
+  let endMarker = null;
   async function displaySavedRoute(route) {
     // Remove any existing route from the map
     if (geoJSONLayer) map.removeLayer(geoJSONLayer);
+    if (startMarker) map.removeLayer(startMarker);
+    if (endMarker) map.removeLayer(endMarker);
 
     // Create a new GeoJSON layer from the saved route's coordinates
     const routeGeoJSON = await fetchHikingRoute(route.coordsList);
 
     if (routeGeoJSON) {
+
+      // Extract the coordinates of the start and end points
+      const coordinates = route.coordsList;
+      const startCoords = coordinates[0];
+      const endCoords = coordinates[coordinates.length - 1];
+
+      // Create markers for the start and end points
+      startMarker = L.marker([startCoords[1], startCoords[0]], {
+        icon: redIcon 
+      }).addTo(map);
+
+      endMarker = L.marker([endCoords[1], endCoords[0]], {
+        icon: blueIcon
+      }).addTo(map);
+
       // You can add this GeoJSON to the map
       if (geoJSONLayer) map.removeLayer(geoJSONLayer); // Remove any existing layer
 
@@ -291,18 +310,27 @@ window.onload = function () {
         <p>Ascent: ${routeGeoJSON.features[0].properties.ascent} m</p>
         <p>Descent: ${routeGeoJSON.features[0].properties.descent} m</p>
       `;
+      positionDiv.style.display = "block";
     }
   }
   closeBookmarkBtn.addEventListener("click", (event) => {
     bookmarkContainer.style.display = "none";
+    positionDiv.style.display = "none";
     if (geoJSONLayer) {
       map.removeLayer(geoJSONLayer);
     }
     routeInfo.innerHTML = "";
     allowedToPutRoutes = true;
 
-    routeMarkers.forEach((marker) => map.removeLayer(marker));
-    routeMarkers = [];
+    if (startMarker) {
+      map.removeLayer(startMarker);
+      startMarker = null;
+    }
+    if (endMarker) {
+      map.removeLayer(endMarker);
+      endMarker = null;
+    }
+
   });
 
 };
