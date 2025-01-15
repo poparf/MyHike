@@ -3,23 +3,20 @@ import { fetchHikingRoute } from "./services/fetchHikingRoute.js";
 import { MAP_TILER_API_URL } from "./config.js";
 
 window.onload = function () {
-  // The red and blue icons are being created for the start and end points.
   const redIcon = L.icon({
-    iconUrl: "/assets/red-pin.png", // Red marker icon
-    //shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',   // Marker shadow
-    iconSize: [47, 47], // Default size
-    iconAnchor: [22, 41], // Anchor point of the icon
-    popupAnchor: [1, -34], // Popup position relative to icon
-    shadowSize: [41, 41], // Shadow size
+    iconUrl: "/assets/red-pin.png", 
+    iconSize: [47, 47], 
+    iconAnchor: [22, 41], 
+    popupAnchor: [1, -34], 
+    shadowSize: [41, 41],
   });
 
   const blueIcon = L.icon({
-    iconUrl: "/assets/blue-pin.png", // Red marker icon
-    //shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',   // Marker shadow
-    iconSize: [40, 40], // Default size
-    iconAnchor: [20, 41], // Anchor point of the icon
-    popupAnchor: [1, -34], // Popup position relative to icon
-    shadowSize: [41, 41], // Shadow size
+    iconUrl: "/assets/blue-pin.png", 
+    iconSize: [40, 40], 
+    iconAnchor: [20, 41], 
+    popupAnchor: [1, -34], 
+    shadowSize: [41, 41], 
   });
 
   const blueDot = L.icon({
@@ -271,22 +268,20 @@ window.onload = function () {
   let startMarker = null;
   let endMarker = null;
   async function displaySavedRoute(route) {
-    // Remove any existing route from the map
+    // remove any existing route from the map
     if (geoJSONLayer) map.removeLayer(geoJSONLayer);
     if (startMarker) map.removeLayer(startMarker);
     if (endMarker) map.removeLayer(endMarker);
 
-    // Create a new GeoJSON layer from the saved route's coordinates
     const routeGeoJSON = await fetchHikingRoute(route.coordsList);
 
     if (routeGeoJSON) {
 
-      // Extract the coordinates of the start and end points
       const coordinates = route.coordsList;
       const startCoords = coordinates[0];
       const endCoords = coordinates[coordinates.length - 1];
 
-      // Create markers for the start and end points
+      // markers for the start and end points
       startMarker = L.marker([startCoords[1], startCoords[0]], {
         icon: redIcon 
       }).addTo(map);
@@ -295,12 +290,10 @@ window.onload = function () {
         icon: blueIcon
       }).addTo(map);
 
-      // You can add this GeoJSON to the map
-      if (geoJSONLayer) map.removeLayer(geoJSONLayer); // Remove any existing layer
+      if (geoJSONLayer) map.removeLayer(geoJSONLayer); // remove any existing layer
 
-      geoJSONLayer = L.geoJSON(routeGeoJSON).addTo(map); // Add the new route to the map
+      geoJSONLayer = L.geoJSON(routeGeoJSON).addTo(map); 
 
-      // Adjust the map to fit the bounds of the new route
       map.fitBounds(geoJSONLayer.getBounds());
 
       routeInfo.innerHTML = `
